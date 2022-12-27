@@ -1,0 +1,13 @@
+{
+  "General": {
+    "PageNotFound": "Page Not Found",
+    "Signup": "Create an account",
+    "Login": "Login",
+    "PublicServicePortal": "Public Service Portal",
+    "CaMauProvince": "Ca Mau Province"
+  },
+  "Language": {
+    "English": "English",
+    "Vietnamese": "Vietnamese"
+  }
+}

@@ -1,0 +1,316 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DB_URL")
+}
+
+model coquan_tuyendung {
+  coquan_id          BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
+  coquan_ma          String               @db.VarChar(255)
+  coquan_ten         String               @db.VarChar(255)
+  coquan_diachi      String               @db.Text
+  coquan_sdt         String               @db.VarChar(50)
+  coquan_email       String               @db.Text
+  coquan_website     String               @db.Text
+  nguoilienhe        String               @db.VarChar(300)
+  co_quan_mota       String               @db.Text
+  created_at         DateTime?            @db.Timestamp(0)
+  updated_at         DateTime?            @db.Timestamp(0)
+  thongbao_tuyendung thongbao_tuyendung[]
+}
+
+model dm_dantoc {
+  dantoc_id    BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  dantoc_ma    String         @db.VarChar(50)
+  dantoc_ten   String         @db.VarChar(255)
+  created_at   DateTime?      @db.Timestamp(0)
+  updated_at   DateTime?      @db.Timestamp(0)
+  hoso_ungvien hoso_ungvien[]
+}
+
+model dm_tongiao {
+  tongiao_id   BigInt         @id @default(autoincrement()) @db.UnsignedBigInt
+  tongiao_ma   String         @db.VarChar(50)
+  tongiao_ten  String         @db.VarChar(255)
+  created_at   DateTime?      @db.Timestamp(0)
+  updated_at   DateTime?      @db.Timestamp(0)
+  hoso_ungvien hoso_ungvien[]
+}
+
+model failed_jobs {
+  id         BigInt   @id @default(autoincrement()) @db.UnsignedBigInt
+  connection String   @db.Text
+  queue      String   @db.Text
+  payload    String   @db.LongText
+  exception  String   @db.LongText
+  failed_at  DateTime @default(now()) @db.Timestamp(0)
+}
+
+model hoso_ungvien {
+  hoso_id                       BigInt                          @id @default(autoincrement()) @db.UnsignedBigInt
+  hoso_ma                       String                          @db.VarChar(50)
+  hoso_ngaynop                  DateTime                        @db.Date
+  hoten_ungvien                 String                          @db.VarChar(500)
+  gioi_tinh                     Boolean
+  sdt                           String                          @db.VarChar(50)
+  email                         String                          @db.VarChar(255)
+  CMND                          String                          @db.VarChar(50)
+  que_quan                      String                          @db.Text
+  diachi_lienhe                 String                          @db.Text
+  tinhtrang_honnhan             Boolean
+  nguoilienhe_sdt               String                          @db.VarChar(50)
+  nguoilienhe_diachi            String                          @db.Text
+  ngayvao_doan                  DateTime                        @db.Date
+  ngayvao_dang                  DateTime                        @db.Date
+  congviec_truoctuyendung       String                          @db.Text
+  trangthai_tuyendung           String                          @db.VarChar(50)
+  dantoc_id                     BigInt                          @db.UnsignedBigInt
+  tongiao_id                    BigInt                          @db.UnsignedBigInt
+  created_at                    DateTime?                       @db.Timestamp(0)
+  updated_at                    DateTime?                       @db.Timestamp(0)
+  dm_dantoc                     dm_dantoc                       @relation(fields: [dantoc_id], references: [dantoc_id], onDelete: Cascade, map: "hoso_ungvien_dantoc_id_foreign")
+  dm_tongiao                    dm_tongiao                      @relation(fields: [tongiao_id], references: [tongiao_id], onDelete: Cascade, map: "hoso_ungvien_tongiao_id_foreign")
+  hoso_ungvien_cautraloi        hoso_ungvien_cautraloi[]        @ignore
+  hoso_ungvien_skill_lever      hoso_ungvien_skill_lever[]      @ignore
+  hoso_ungvien_thongtin_giadinh hoso_ungvien_thongtin_giadinh[]
+  quatrinh_congtac              quatrinh_congtac[]
+  quatrinh_hoctap               quatrinh_hoctap[]
+  ungtuyen                      ungtuyen[]
+
+  @@index([dantoc_id], map: "hoso_ungvien_dantoc_id_foreign")
+  @@index([tongiao_id], map: "hoso_ungvien_tongiao_id_foreign")
+}
+
+model hoso_ungvien_cauhoi_tuyendung {
+  cauhoi_id              BigInt                   @id @default(autoincrement()) @db.UnsignedBigInt
+  cauhoi_noidung         String                   @db.Text
+  cauhoi_trangthai       Boolean
+  created_at             DateTime?                @db.Timestamp(0)
+  updated_at             DateTime?                @db.Timestamp(0)
+  hoso_ungvien_cautraloi hoso_ungvien_cautraloi[] @ignore
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model hoso_ungvien_cautraloi {
+  hoso_id                       BigInt                        @db.UnsignedBigInt
+  cauhoi_id                     BigInt                        @db.UnsignedBigInt
+  cautraloi_noidung             String                        @db.Text
+  created_at                    DateTime?                     @db.Timestamp(0)
+  updated_at                    DateTime?                     @db.Timestamp(0)
+  hoso_ungvien_cauhoi_tuyendung hoso_ungvien_cauhoi_tuyendung @relation(fields: [cauhoi_id], references: [cauhoi_id], onDelete: Cascade, map: "hoso_ungvien_cautraloi_cauhoi_id_foreign")
+  hoso_ungvien                  hoso_ungvien                  @relation(fields: [hoso_id], references: [hoso_id], onDelete: Cascade, map: "hoso_ungvien_cautraloi_hoso_id_foreign")
+
+  @@index([cauhoi_id], map: "hoso_ungvien_cautraloi_cauhoi_id_foreign")
+  @@index([hoso_id], map: "hoso_ungvien_cautraloi_hoso_id_foreign")
+  @@ignore
+}
+
+model hoso_ungvien_skill {
+  skill_id                 BigInt                     @id @default(autoincrement()) @db.UnsignedBigInt
+  skill_code               String                     @db.VarChar(255)
+  skill_name               String                     @db.VarChar(255)
+  skill_status             Boolean
+  group_id                 BigInt                     @db.UnsignedBigInt
+  created_at               DateTime?                  @db.Timestamp(0)
+  updated_at               DateTime?                  @db.Timestamp(0)
+  hoso_ungvien_skillgroup  hoso_ungvien_skillgroup    @relation(fields: [group_id], references: [group_id], onDelete: Cascade, map: "hoso_ungvien_skill_group_id_foreign")
+  hoso_ungvien_skill_lever hoso_ungvien_skill_lever[] @ignore
+
+  @@index([group_id], map: "hoso_ungvien_skill_group_id_foreign")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model hoso_ungvien_skill_lever {
+  hoso_id            BigInt             @db.UnsignedBigInt
+  skill_id           BigInt             @db.UnsignedBigInt
+  level              String             @db.VarChar(11)
+  created_at         DateTime?          @db.Timestamp(0)
+  updated_at         DateTime?          @db.Timestamp(0)
+  hoso_ungvien       hoso_ungvien       @relation(fields: [hoso_id], references: [hoso_id], onDelete: Cascade, map: "hoso_ungvien_skill_lever_hoso_id_foreign")
+  hoso_ungvien_skill hoso_ungvien_skill @relation(fields: [skill_id], references: [skill_id], onDelete: Cascade, map: "hoso_ungvien_skill_lever_skill_id_foreign")
+
+  @@index([hoso_id], map: "hoso_ungvien_skill_lever_hoso_id_foreign")
+  @@index([skill_id], map: "hoso_ungvien_skill_lever_skill_id_foreign")
+  @@ignore
+}
+
+model hoso_ungvien_skillgroup {
+  group_id           BigInt               @id @default(autoincrement()) @db.UnsignedBigInt
+  group_name         String               @db.VarChar(100)
+  group_code         String               @db.VarChar(300)
+  group_status       Boolean
+  created_at         DateTime?            @db.Timestamp(0)
+  updated_at         DateTime?            @db.Timestamp(0)
+  hoso_ungvien_skill hoso_ungvien_skill[]
+}
+
+model hoso_ungvien_thongtin_giadinh {
+  thongtingiadinh_id BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
+  hoten              String       @db.VarChar(300)
+  namsinh            DateTime     @db.Date
+  Nghenghiep         String       @db.VarChar(300)
+  CMND               String       @db.VarChar(50)
+  quanhe             String       @db.VarChar(50)
+  diachi_hientai     String       @db.Text
+  hoso_id            BigInt       @db.UnsignedBigInt
+  created_at         DateTime?    @db.Timestamp(0)
+  updated_at         DateTime?    @db.Timestamp(0)
+  hoso_ungvien       hoso_ungvien @relation(fields: [hoso_id], references: [hoso_id], onDelete: Cascade, map: "hoso_ungvien_thongtin_giadinh_hoso_id_foreign")
+
+  @@index([hoso_id], map: "hoso_ungvien_thongtin_giadinh_hoso_id_foreign")
+}
+
+model ketqua_thituyen {
+  ketqua_id             BigInt                @id @default(autoincrement()) @db.UnsignedBigInt
+  tongdiem              String                @db.VarChar(20)
+  danhgia_baithi        String                @db.VarChar(255)
+  ketqua                String                @db.VarChar(11)
+  upload_file           String                @db.Text
+  trangthai             Boolean
+  lichthi_ct_id         BigInt                @db.UnsignedBigInt
+  created_at            DateTime?             @db.Timestamp(0)
+  updated_at            DateTime?             @db.Timestamp(0)
+  lich_thituyen_chitiet lich_thituyen_chitiet @relation(fields: [lichthi_ct_id], references: [lichthi_ct_id], onDelete: Cascade, map: "ketqua_thituyen_lichthi_ct_id_foreign")
+
+  @@index([lichthi_ct_id], map: "ketqua_thituyen_lichthi_ct_id_foreign")
+}
+
+model lich_thituyen {
+  lichthi_id            BigInt                  @id @default(autoincrement()) @db.UnsignedBigInt
+  ngaythi               DateTime                @db.Date
+  diadiem               String                  @db.Text
+  noidung_thituyen      String                  @db.Text
+  thoigian              DateTime                @db.Date
+  soluong               Int
+  created_at            DateTime?               @db.Timestamp(0)
+  updated_at            DateTime?               @db.Timestamp(0)
+  lich_thituyen_chitiet lich_thituyen_chitiet[]
+}
+
+model lich_thituyen_chitiet {
+  lichthi_ct_id   BigInt            @id @default(autoincrement()) @db.UnsignedBigInt
+  ungtuyen_id     BigInt            @db.UnsignedBigInt
+  lichthi_id      BigInt            @db.UnsignedBigInt
+  created_at      DateTime?         @db.Timestamp(0)
+  updated_at      DateTime?         @db.Timestamp(0)
+  lich_thituyen   lich_thituyen     @relation(fields: [lichthi_id], references: [lichthi_id], onDelete: Cascade, map: "lich_thituyen_chitiet_lichthi_id_foreign")
+  ungtuyen        ungtuyen          @relation(fields: [ungtuyen_id], references: [ungtuyen_id], onDelete: Cascade, map: "lich_thituyen_chitiet_ungtuyen_id_foreign")
+  ketqua_thituyen ketqua_thituyen[]
+
+  @@index([lichthi_id], map: "lich_thituyen_chitiet_lichthi_id_foreign")
+  @@index([ungtuyen_id], map: "lich_thituyen_chitiet_ungtuyen_id_foreign")
+}
+
+model migrations {
+  id        Int    @id @default(autoincrement()) @db.UnsignedInt
+  migration String @db.VarChar(255)
+  batch     Int
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
+model password_resets {
+  email      String    @db.VarChar(255)
+  token      String    @db.VarChar(255)
+  created_at DateTime? @db.Timestamp(0)
+
+  @@index([email], map: "password_resets_email_index")
+  @@ignore
+}
+
+model quatrinh_congtac {
+  quatrinh_congtac_id BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
+  tungay              DateTime     @db.Date
+  denngay             DateTime     @db.Date
+  ten_coquan_donvi    String       @db.VarChar(255)
+  chuvu               String       @db.VarChar(500)
+  congviec_phutrach   String       @db.VarChar(500)
+  thanhtich_noibac    String       @db.Text
+  hoso_id             BigInt       @db.UnsignedBigInt
+  created_at          DateTime?    @db.Timestamp(0)
+  updated_at          DateTime?    @db.Timestamp(0)
+  hoso_ungvien        hoso_ungvien @relation(fields: [hoso_id], references: [hoso_id], onDelete: Cascade, map: "quatrinh_congtac_hoso_id_foreign")
+
+  @@index([hoso_id], map: "quatrinh_congtac_hoso_id_foreign")
+}
+
+model quatrinh_hoctap {
+  quatrinh_hoctap_id    BigInt       @id @default(autoincrement()) @db.UnsignedBigInt
+  tungay                DateTime     @db.Date
+  denngay               DateTime     @db.Date
+  bac_kynang            String       @db.VarChar(255)
+  ten_donvi_daotao      String       @db.VarChar(500)
+  ten_chungnhan_vanbang String       @db.VarChar(500)
+  xeploai               String       @db.VarChar(50)
+  namcap                DateTime     @db.Date
+  hoso_id               BigInt       @db.UnsignedBigInt
+  created_at            DateTime?    @db.Timestamp(0)
+  updated_at            DateTime?    @db.Timestamp(0)
+  hoso_ungvien          hoso_ungvien @relation(fields: [hoso_id], references: [hoso_id], onDelete: Cascade, map: "quatrinh_hoctap_hoso_id_foreign")
+
+  @@index([hoso_id], map: "quatrinh_hoctap_hoso_id_foreign")
+}
+
+model thongbao_tuyendung {
+  thongbao_id                BigInt                       @id @default(autoincrement()) @db.UnsignedBigInt
+  thongbao_ma                String                       @db.VarChar(50)
+  thongbao_ngaylap           DateTime                     @db.Date
+  thongbao_hannop            DateTime                     @db.Date
+  thongbao_noidung           String                       @db.Text
+  quyenloi                   String                       @db.Text
+  thanhphan_hoso             String                       @db.Text
+  phuongthuc_nophs           String                       @db.Text
+  thongbao_trangthai         Boolean
+  coquan_id                  BigInt                       @db.UnsignedBigInt
+  created_at                 DateTime?                    @db.Timestamp(0)
+  updated_at                 DateTime?                    @db.Timestamp(0)
+  coquan_tuyendung           coquan_tuyendung             @relation(fields: [coquan_id], references: [coquan_id], onDelete: Cascade, map: "thongbao_tuyendung_coquan_id_foreign")
+  thongbao_tuyendung_chitiet thongbao_tuyendung_chitiet[]
+
+  @@index([coquan_id], map: "thongbao_tuyendung_coquan_id_foreign")
+}
+
+model thongbao_tuyendung_chitiet {
+  thongbao_ct_id     BigInt             @id @default(autoincrement()) @db.UnsignedBigInt
+  vitri_tuyendung    String             @db.Text
+  soluong            Int
+  mota               String             @db.Text
+  yeucauchung        String             @db.Text
+  muc_luong_min      String             @db.LongText
+  muc_luong_max      String             @db.LongText
+  thongbao_id        BigInt             @db.UnsignedBigInt
+  created_at         DateTime?          @db.Timestamp(0)
+  updated_at         DateTime?          @db.Timestamp(0)
+  thongbao_tuyendung thongbao_tuyendung @relation(fields: [thongbao_id], references: [thongbao_id], onDelete: Cascade, map: "thongbao_tuyendung_chitiet_thongbao_id_foreign")
+  ungtuyen           ungtuyen[]
+
+  @@index([thongbao_id], map: "thongbao_tuyendung_chitiet_thongbao_id_foreign")
+}
+
+model ungtuyen {
+  ungtuyen_id                BigInt                     @id @default(autoincrement()) @db.UnsignedBigInt
+  thongbao_ct_id             BigInt                     @db.UnsignedBigInt
+  hoso_id                    BigInt                     @db.UnsignedBigInt
+  created_at                 DateTime?                  @db.Timestamp(0)
+  updated_at                 DateTime?                  @db.Timestamp(0)
+  hoso_ungvien               hoso_ungvien               @relation(fields: [hoso_id], references: [hoso_id], onDelete: Cascade, map: "ungtuyen_hoso_id_foreign")
+  thongbao_tuyendung_chitiet thongbao_tuyendung_chitiet @relation(fields: [thongbao_ct_id], references: [thongbao_ct_id], onDelete: Cascade, map: "ungtuyen_thongbao_ct_id_foreign")
+  lich_thituyen_chitiet      lich_thituyen_chitiet[]
+
+  @@index([hoso_id], map: "ungtuyen_hoso_id_foreign")
+  @@index([thongbao_ct_id], map: "ungtuyen_thongbao_ct_id_foreign")
+}
+
+model users {
+  id                BigInt    @id @default(autoincrement()) @db.UnsignedBigInt
+  name              String    @db.VarChar(255)
+  email             String    @unique(map: "users_email_unique") @db.VarChar(255)
+  email_verified_at DateTime? @db.Timestamp(0)
+  password          String    @db.VarChar(255)
+  remember_token    String?   @db.VarChar(100)
+  created_at        DateTime? @db.Timestamp(0)
+  updated_at        DateTime? @db.Timestamp(0)
+}

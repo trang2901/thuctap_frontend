@@ -1,0 +1,6 @@
+{
+  "svn.delete.ignoredRulesForDeletedFiles": [
+    "build\\cache\\webpack\\client-development\\0.pack_",
+    "build\\cache\\webpack\\client-development\\index.pack_"
+  ]
+}

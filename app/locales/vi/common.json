@@ -1,0 +1,13 @@
+{
+  "General": {
+    "PageNotFound": "Không tìm thấy trang",
+    "Signup": "Tạo tài khoản",
+    "Login": "Đăng nhập",
+    "PublicServicePortal": "Cổng Dịch Vụ Công",
+    "CaMauProvince": "Tỉnh Cà Mau"
+  },
+  "Language": {
+    "English": "Tiếng Anh",
+    "Vietnamese": "Tiếng Việt"
+  }
+}
